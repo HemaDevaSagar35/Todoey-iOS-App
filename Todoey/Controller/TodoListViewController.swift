@@ -12,6 +12,7 @@ import CoreData
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
+    
     let fileDirecotory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
 //    @IBOutlet weak var searchBar: UISearchBar!
@@ -116,5 +117,17 @@ extension TodoListViewController: UISearchBarDelegate{
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
 
         loadData(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0{
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+            loadData()
+        }
+        
     }
 }
