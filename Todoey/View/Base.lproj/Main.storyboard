@@ -112,7 +112,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="p45-nL-JSm" kind="show" id="wt2-6T-sRe"/>
+                        <segue destination="p45-nL-JSm" kind="show" identifier="GoToItem" id="wt2-6T-sRe"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fnM-7G-uJi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

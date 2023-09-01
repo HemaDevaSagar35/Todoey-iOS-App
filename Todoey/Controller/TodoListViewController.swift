@@ -12,6 +12,7 @@ import CoreData
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
+    var selectCategory : Categorie?
     
     let fileDirecotory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
@@ -65,6 +66,7 @@ class TodoListViewController: UITableViewController {
             let item = Item(context: self.context)
             item.title = textField.text!
             item.checked = false
+            item.parentCategory = self.selectCategory!
             
             self.itemArray.append(item)
             self.updateState()
@@ -95,8 +97,15 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
 
-    func loadData(with request : NSFetchRequest<Item> = Item.fetchRequest()){
-       
+    func loadData(with request : NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil){
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name == %@", selectCategory!.name!)
+        
+        if let filterPredicate = predicate{
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, filterPredicate])
+        }else{
+            request.predicate = categoryPredicate
+        }
         do{
             itemArray = try context.fetch(request)
         }catch{
@@ -113,10 +122,10 @@ extension TodoListViewController: UISearchBarDelegate{
 //        print(searchBar.text!)
         let request : NSFetchRequest<Item> = Item.fetchRequest()
 
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
 
-        loadData(with: request)
+        loadData(with: request, predicate: predicate)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
