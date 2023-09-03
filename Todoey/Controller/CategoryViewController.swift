@@ -7,18 +7,20 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
-class CategoryViewController: UITableViewController {
 
-    var categoriesArray = [Categorie]()
+class CategoryViewController: SwipeTableViewController {
+
+    var categoriesArray : Results<Categorie>?
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let realm = try! Realm()
+//    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadData()
-
+        
         
     }
 
@@ -27,12 +29,15 @@ class CategoryViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return categoriesArray.count
+        return categoriesArray?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        cell.textLabel?.text = categoriesArray[indexPath.row].name
+        
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
+//        cell.delegate = self
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        cell.textLabel?.text = categoriesArray?[indexPath.row].name ?? "Not yet added any items"
         
         return cell
         
@@ -45,7 +50,7 @@ class CategoryViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination as! TodoListViewController
         if let indexPath = tableView.indexPathForSelectedRow{
-            destinationVC.selectCategory = categoriesArray[indexPath.row]
+            destinationVC.selectCategory = categoriesArray?[indexPath.row]
         }
     }
     
@@ -55,15 +60,16 @@ class CategoryViewController: UITableViewController {
         
         var textField = UITextField()
         let alert = UIAlertController(title: "Add a new category", message: "", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alert.addAction(cancelAction)
+        
         let action = UIAlertAction(title: "Add Category", style: .default){action in
-            print("success")
-            print(textField.text!)
-            // Add to the categorie
-            let cat = Categorie(context: self.context)
-            cat.name = textField.text!
-            self.categoriesArray.append(cat)
             
-            self.updateCategory()
+            let cat = Categorie()
+            cat.name = textField.text!
+            
+            self.updateCategory(cat: cat)
         }
         
         alert.addAction(action)
@@ -79,9 +85,11 @@ class CategoryViewController: UITableViewController {
     
     // MARK: - Data Manipulation
     
-    func updateCategory(){
+    func updateCategory(cat : Categorie){
         do{
-            try context.save()
+            try realm.write({
+                realm.add(cat)
+            })
         }catch{
             print("Error occured while save the category: \(error)")
         }
@@ -89,15 +97,27 @@ class CategoryViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    // MARK: - Load Data
     
-    func loadData(with request : NSFetchRequest<Categorie> = Categorie.fetchRequest()){
-        do{
-            categoriesArray = try context.fetch(request)
-        }catch{
-            print("Error occured while loading the categories: \(error)")
+    func loadData(){
+        categoriesArray = realm.objects(Categorie.self)
+    }
+    
+    override func updateModel(at: IndexPath) {
+        
+        if let catego = self.categoriesArray?[at.row]{
+            do{
+                try self.realm.write({
+                    self.realm.delete(catego)
+                })
+            }catch{
+                print("Issue occured while deleting : \(error)")
+            }
         }
+
     }
     
 
 }
+
+
+
