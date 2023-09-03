@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Hue
+import ColorKit
 import RealmSwift
 
 
@@ -14,14 +16,30 @@ class CategoryViewController: SwipeTableViewController {
 
     var categoriesArray : Results<Categorie>?
     
+    @IBOutlet weak var addButton: UIBarButtonItem!
     let realm = try! Realm()
 //    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadData()
+        tableView.separatorStyle = .none
         
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navBar = navigationController?.navigationBar else {fatalError("NavBar isn't initialized")}
+//        navBar.backgroundColor = UIColor(hex: "#009CDA")
+        let color = UIColor(hex: "#182538")
+        navBar.standardAppearance.backgroundColor = color
+        navBar.scrollEdgeAppearance?.backgroundColor = color
+        
+        navBar.scrollEdgeAppearance?.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : color.isDark ? UIColor.white : UIColor.darkGray]
+        navBar.standardAppearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : color.isDark ? UIColor.white : UIColor.darkGray]
+        
+        navBar.tintColor = color.isDark ? UIColor.white : UIColor.darkGray
+        addButton.tintColor = color.isDark ? UIColor.white : UIColor.darkGray
     }
 
     // MARK: - Table view data source
@@ -34,10 +52,14 @@ class CategoryViewController: SwipeTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
-//        cell.delegate = self
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = categoriesArray?[indexPath.row].name ?? "Not yet added any items"
+
+        if let color = categoriesArray?[indexPath.row].colorValue{
+            let color = UIColor(hex: color)
+            cell.backgroundColor = color
+            cell.textLabel?.textColor = color.isDark ? UIColor.white : UIColor.darkGray
+        }
         
         return cell
         
@@ -45,6 +67,7 @@ class CategoryViewController: SwipeTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "GoToItem", sender: self)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -68,6 +91,7 @@ class CategoryViewController: SwipeTableViewController {
             
             let cat = Categorie()
             cat.name = textField.text!
+            cat.colorValue = UIColor.random().hex
             
             self.updateCategory(cat: cat)
         }

@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import Hue
 import RealmSwift
 
 class TodoListViewController: SwipeTableViewController {
     
+    @IBOutlet weak var addButton: UIBarButtonItem!
+    @IBOutlet weak var searchBar: UISearchBar!
     var itemArray : Results<Item>?
     let realm = try! Realm()
     var selectCategory : Categorie?{
@@ -21,7 +24,34 @@ class TodoListViewController: SwipeTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.separatorStyle = .none
         
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let colorHex = selectCategory?.colorValue{
+            
+            title = selectCategory!.name
+            guard let navBar = navigationController?.navigationBar else {fatalError("NavBar isn't initialized")}
+
+            let navBarColor = UIColor(hex: colorHex)
+
+            navBar.standardAppearance.backgroundColor = navBarColor
+            navBar.scrollEdgeAppearance?.backgroundColor = navBarColor
+
+//            navBar.barTintColor = navBarColor
+            navBar.tintColor = navBarColor.isDark ? UIColor.white : UIColor.darkGray
+            
+            navBar.scrollEdgeAppearance?.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : navBarColor.isDark ? UIColor.white : UIColor.darkGray]
+            navBar.standardAppearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : navBarColor.isDark ? UIColor.white : UIColor.darkGray]
+            
+            addButton.tintColor = navBarColor.isDark ? UIColor.white : UIColor.darkGray
+
+            searchBar.barTintColor = navBarColor
+            searchBar.searchTextField.backgroundColor = .white
+
+        }
     }
     
     //MARK: - Table View Data Source
@@ -38,6 +68,14 @@ class TodoListViewController: SwipeTableViewController {
             
             cell.textLabel?.text = item.title
             cell.accessoryType = item.checked ? .checkmark : .none
+            let desaturatedBlue = UIColor(hex: selectCategory?.colorValue ?? "#009CDA")
+            
+            let setValue = CGFloat(indexPath.row) / CGFloat(itemArray!.count)
+//            print(setValue)
+            let saturatedBlue = desaturatedBlue.add(hue: 1.0, saturation: 0.2, brightness: -(0.5*setValue), alpha: 0.0)
+            cell.backgroundColor = saturatedBlue
+            
+            cell.textLabel?.textColor = saturatedBlue.isDark ? UIColor.white : UIColor.darkGray
             
         }else{
            

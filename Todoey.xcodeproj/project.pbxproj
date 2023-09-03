@@ -10,6 +10,8 @@
 		B52B97582AA3E7CA008C2217 /* SwipeCellKit in Frameworks */ = {isa = PBXBuildFile; productRef = B52B97572AA3E7CA008C2217 /* SwipeCellKit */; };
 		B52B975A2AA4138F008C2217 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B97592AA4138F008C2217 /* SwipeTableViewController.swift */; };
 		B54F02FA2A9D9B9A006A723E /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54F02F92A9D9B9A006A723E /* CategoryViewController.swift */; };
+		B54FD4402AA4FE10002A6D71 /* Hue in Frameworks */ = {isa = PBXBuildFile; productRef = B54FD43F2AA4FE10002A6D71 /* Hue */; };
+		B54FD4432AA50867002A6D71 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = B54FD4422AA50867002A6D71 /* ColorKit */; };
 		B5CC0AFB2AA1879800BF020C /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = B5CC0AFA2AA1879800BF020C /* Realm */; };
 		B5CC0AFD2AA1879800BF020C /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B5CC0AFC2AA1879800BF020C /* RealmSwift */; };
 		B5CC0AFF2AA18E7500BF020C /* Categorie.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CC0AFE2AA18E7500BF020C /* Categorie.swift */; };
@@ -40,7 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B54FD4432AA50867002A6D71 /* ColorKit in Frameworks */,
 				B5CC0AFD2AA1879800BF020C /* RealmSwift in Frameworks */,
+				B54FD4402AA4FE10002A6D71 /* Hue in Frameworks */,
 				B52B97582AA3E7CA008C2217 /* SwipeCellKit in Frameworks */,
 				B5CC0AFB2AA1879800BF020C /* Realm in Frameworks */,
 			);
@@ -126,6 +130,8 @@
 				B5CC0AFA2AA1879800BF020C /* Realm */,
 				B5CC0AFC2AA1879800BF020C /* RealmSwift */,
 				B52B97572AA3E7CA008C2217 /* SwipeCellKit */,
+				B54FD43F2AA4FE10002A6D71 /* Hue */,
+				B54FD4422AA50867002A6D71 /* ColorKit */,
 			);
 			productName = Todoey;
 			productReference = EB2BE4F6239524DB00FB933B /* Todoey.app */;
@@ -158,6 +164,8 @@
 			packageReferences = (
 				B5CC0AF92AA1879800BF020C /* XCRemoteSwiftPackageReference "realm-swift" */,
 				B52B97562AA3E7CA008C2217 /* XCRemoteSwiftPackageReference "SwipeCellKit" */,
+				B54FD43E2AA4FE10002A6D71 /* XCRemoteSwiftPackageReference "Hue" */,
+				B54FD4412AA50867002A6D71 /* XCRemoteSwiftPackageReference "ColorKit" */,
 			);
 			productRefGroup = EB2BE4F7239524DB00FB933B /* Products */;
 			projectDirPath = "";
@@ -399,6 +407,22 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		B54FD43E2AA4FE10002A6D71 /* XCRemoteSwiftPackageReference "Hue" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/zenangst/Hue.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		B54FD4412AA50867002A6D71 /* XCRemoteSwiftPackageReference "ColorKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Boris-Em/ColorKit.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		B5CC0AF92AA1879800BF020C /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -414,6 +438,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B52B97562AA3E7CA008C2217 /* XCRemoteSwiftPackageReference "SwipeCellKit" */;
 			productName = SwipeCellKit;
+		};
+		B54FD43F2AA4FE10002A6D71 /* Hue */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B54FD43E2AA4FE10002A6D71 /* XCRemoteSwiftPackageReference "Hue" */;
+			productName = Hue;
+		};
+		B54FD4422AA50867002A6D71 /* ColorKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B54FD4412AA50867002A6D71 /* XCRemoteSwiftPackageReference "ColorKit" */;
+			productName = ColorKit;
 		};
 		B5CC0AFA2AA1879800BF020C /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
